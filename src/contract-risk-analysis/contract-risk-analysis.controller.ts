@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ContractRiskAnalysisService } from './contract-risk-analysis.service';
 import { CreateContractRiskAnalysisDto } from './dto/create-contract-risk-analysis.dto';
 import { UpdateContractRiskAnalysisDto } from './dto/update-contract-risk-analysis.dto';
 
+@ApiTags('contract-risk-analysis')
 @Controller('contract-risk-analysis')
 export class ContractRiskAnalysisController {
   constructor(
