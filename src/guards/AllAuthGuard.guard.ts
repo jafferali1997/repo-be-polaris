@@ -34,7 +34,6 @@ export class AllAuthGuard implements CanActivate {
 
     if (token) {
       const jwtUserData: any = this.jwt.decode(token);
-
       if (
         new Date(new Date().toUTCString()).getTime() <
         new Date(

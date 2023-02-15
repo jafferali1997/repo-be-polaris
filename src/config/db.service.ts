@@ -29,7 +29,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       entities: [__dirname + '/../**/entity/*.{ts,js}'],
       migrationsTableName: 'typeorm_migrations',
       // ssl: configuration.get<boolean>('SSL_SYNC'),
-      // synchronize: this.config.get<boolean>('DATABASE_SYNC'), // never use TRUE in production!
+      synchronize: this.config.get<boolean>('DATABASE_SYNC'), // never use TRUE in production!
     };
   }
 }

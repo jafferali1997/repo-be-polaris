@@ -12,6 +12,8 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './config/db.service';
 import { ContractRiskAnalysisModule } from './contract-risk-analysis/contract-risk-analysis.module';
+import { GoogleOauthModule } from './google-oauth/google-oauth.module';
+import { FacebookOauthModule } from './facebook-oauth/facebook-oauth.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { ContractRiskAnalysisModule } from './contract-risk-analysis/contract-ri
     AuthModule,
     HttpModule,
     ContractRiskAnalysisModule,
+    GoogleOauthModule,
+    FacebookOauthModule,
   ],
   controllers: [AppController],
   providers: [

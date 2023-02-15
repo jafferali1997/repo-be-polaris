@@ -10,7 +10,7 @@ async function bootstrap() {
     logger: getLogLevels(process.env.NODE_ENV === 'PRODUCTION'),
   };
   const app = await NestFactory.create(AppModule, appOptions);
-  const PORT: number = parseInt(process.env.PORT, 10) || 5000;
+  const PORT: number = parseInt(process.env.PORT, 10) || 3000;
   app.setGlobalPrefix('api/');
   app.enableCors();
   app.useGlobalPipes(

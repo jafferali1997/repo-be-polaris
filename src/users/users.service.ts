@@ -195,7 +195,7 @@ export class UsersService {
   async createOrFindUserWithGoogle(payload: any) {
     const { email, access_token } = payload;
 
-    const user_email: Login = await this.loginRepository.findOne({
+    let user_email: Login = await this.loginRepository.findOne({
       where: { email },
     });
 
@@ -206,24 +206,26 @@ export class UsersService {
         email: user_email.email,
         role: user_email.role,
         id: user_email.id,
-        access_token,
+        access_token: this.helper.generateToken(user_email),
       };
     }
-    const emailVerification = await this.verifyEmail(email);
 
     const finalPayload = {
       email,
       role: RoleType.USER,
-      ...emailVerification,
+      isEmailVerified: true,
     };
 
     const result = await this.loginRepository.save(finalPayload);
+    user_email = await this.loginRepository.findOne({
+      where: { email },
+    });
 
     return {
       email: user_email.email,
       role: user_email.role,
       id: user_email.id,
-      access_token,
+      access_token: this.helper.generateToken(user_email),
     };
   }
 
@@ -241,26 +243,25 @@ export class UsersService {
         email: user_email.email,
         role: user_email.role,
         id: user_email.id,
-        access_token,
+        access_token: this.helper.generateToken(user_email),
       };
     }
 
-    const emailVerification = await this.verifyEmail(email);
     const finalPayload = {
       email,
       facebookId: id,
-      // role: RoleType.USER,
-      ...emailVerification,
+      role: RoleType.USER,
+      isEmailVerified: true,
     };
 
     const result = await this.loginRepository.save(finalPayload);
-    const userWithoutPassword = this.helper.excludeOnlyPwd(result);
-    const resp = this.helper.responseModifier(
-      HttpStatus.CREATED,
-      'Record created successfully',
-      true,
-      userWithoutPassword,
-    );
+    //const userWithoutPassword = this.helper.excludeOnlyPwd(result);
+    // const resp = this.helper.responseModifier(
+    //   HttpStatus.CREATED,
+    //   'Record created successfully',
+    //   true,
+    //   userWithoutPassword,
+    // );
 
     // const nsp = {
     //   succeeded: true,
@@ -269,10 +270,57 @@ export class UsersService {
     //   data: [userWithoutPassword],
     // };
     return {
-      email: user_email.email,
-      role: user_email.role,
-      id: user_email.id,
-      access_token,
+      email: result.email,
+      role: result.role,
+      id: result.id,
+      access_token: this.helper.generateToken(result),
+    };
+  }
+
+  async createOrFindUserWithLinkedin(payload: any) {
+    const { email, access_token, id } = payload;
+
+    const user_email: Login = await this.loginRepository.findOne({
+      where: { email },
+    });
+
+    if (user_email) {
+      // if (user_email.loginWithType !== LoginWithType.FACEBOOK)
+      //   throw new HttpException('email already exists', HttpStatus.CONFLICT);
+      return {
+        email: user_email.email,
+        role: user_email.role,
+        id: user_email.id,
+        access_token: this.helper.generateToken(user_email),
+      };
+    }
+
+    const finalPayload = {
+      email,
+      role: RoleType.USER,
+      isEmailVerified: true,
+    };
+
+    const result = await this.loginRepository.save(finalPayload);
+    //const userWithoutPassword = this.helper.excludeOnlyPwd(result);
+    // const resp = this.helper.responseModifier(
+    //   HttpStatus.CREATED,
+    //   'Record created successfully',
+    //   true,
+    //   userWithoutPassword,
+    // );
+
+    // const nsp = {
+    //   succeeded: true,
+    //   httpStatusCode: 200,
+    //   message: 'Record(s) get successfully.',
+    //   data: [userWithoutPassword],
+    // };
+    return {
+      email: result.email,
+      role: result.role,
+      id: result.id,
+      access_token: this.helper.generateToken(result),
     };
   }
 
