@@ -1,7 +1,7 @@
 import { OUserDetails } from './../constants/user-details-value';
 import { UtilitiesService } from '@/helpers/utils';
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
-import { Not, Repository } from 'typeorm';
+import { Like, Not, Repository } from 'typeorm';
 import { ForgotPasswordDto } from './dto/ForgotPasswordDto.dto';
 import { LoginDto } from './dto/loginDto';
 import { IUser } from '@/interfaces/IUser.interfaces';
@@ -17,6 +17,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ChangePasswordDto } from './dto/ChangePassword.dto';
 import { RoleType, NOT_FOUND_RESPONSE } from '@/constants';
 import { VerifyEmailDto } from './dto/VerifyEmailDto.dto';
+import { UserToUpdate } from './dto/UpdateUserByAdmin.dto';
 
 @Injectable()
 export class UsersService {
@@ -44,6 +45,7 @@ export class UsersService {
     const data = await this.loginRepository.findAndCount({
       where: {
         id: Not(id),
+        ...(option.search?.length && { name: Like(`%${option.search}%`) }),
       },
       select: {
         ...OUserDetails,
@@ -68,7 +70,7 @@ export class UsersService {
   async createUser(payload: IUser): Promise<any> {
     const pwd = payload.password;
 
-    const { email, phone, name, referralCode } = payload;
+    const { email, name } = payload;
 
     const unVerified_email: Login = await this.loginRepository.findOne({
       where: { email: email, isEmailVerified: false },
@@ -100,6 +102,7 @@ export class UsersService {
         password: encodedPassword,
         emailVerifyOtp: otp,
         role: RoleType.USER,
+        name,
       });
       await this.loginRepository.save(user);
 
@@ -322,6 +325,17 @@ export class UsersService {
       id: result.id,
       access_token: this.helper.generateToken(result),
     };
+  }
+
+  async patchUser(updateData: UserToUpdate, id: number) {
+    const user = await this.loginRepository.findOne({ where: { id } });
+    if (!user)
+      throw new HttpException(
+        'No user found in database to update',
+        HttpStatus.NOT_FOUND,
+      );
+
+    return await this.loginRepository.update({ id }, { ...updateData });
   }
 
   async deleteUser(userId: number): Promise<any> {

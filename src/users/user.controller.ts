@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   DefaultValuePipe,
   ParseIntPipe,
+  Patch,
 } from '@nestjs/common';
 import { Request, query } from 'express';
 import { UsersService } from './users.service';
@@ -27,6 +28,7 @@ import { RoleType } from '@/constants';
 import { VerifyEmailOtpDto } from './dto/VerifyEmailOtpDto.dto';
 import { ChangePasswordDto } from './dto/ChangePassword.dto';
 import { VerifyEmailDto } from './dto/VerifyEmailDto.dto';
+import { UserToUpdate } from './dto/UpdateUserByAdmin.dto';
 // import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('users') //used to make the blocks of specific apis in swagger
@@ -39,21 +41,31 @@ export class UsersController {
   ) {}
 
   @UseInterceptors(ApiPaginationResponseInterceptor)
-  @Get()
+  @Post()
   @UseGuards(AllAuthGuard)
-  @Roles(RoleType.USER)
+  @Roles(RoleType.ADMIN)
   @ApiBearerAuth()
   @ApiQueryArray([
     { name: 'limit', type: 'number', example: 10 },
-    { name: 'pages', type: 'number', required: false, example: 1 },
+    { name: 'pages', type: 'number', example: 1 },
   ])
   async getUsers(
     @Req() req: object,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Body() body: { search: string },
   ) {
-    const options = { limit, page };
+    const options = { limit, page, search: body.search };
     const result = await this.usersService.getAllUsers(req, options);
+    return result;
+  }
+
+  @Patch('/:id')
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN)
+  @ApiBearerAuth()
+  async updateUsers(@Body() updateData: UserToUpdate, @Query('id') id: number) {
+    const result = await this.usersService.patchUser(updateData, id);
     return result;
   }
 

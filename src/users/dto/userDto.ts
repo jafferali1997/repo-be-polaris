@@ -21,25 +21,10 @@ export class UserDto {
   email: string;
 
   @ApiProperty({
-    description: 'phone',
-    example: '+123456890',
-  })
-  @IsNotEmpty({ message: 'phone number can not be empty' })
-  @IsString()
-  phone: string;
-
-  @ApiProperty({
     description: 'password',
     example: '*****',
   })
   @IsNotEmpty({ message: 'password can not be empty' })
   @IsString()
   password: string;
-
-  @ApiProperty({
-    description: 'referralCode',
-    example: 'h1y4na2',
-  })
-  @IsString()
-  referralCode?: string;
 }

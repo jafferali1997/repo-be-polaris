@@ -25,13 +25,8 @@ export class Login {
   @Column({ type: 'enum', enum: RoleType, nullable: false })
   role: RoleType;
 
-  @Column({
-    type: 'enum',
-    enum: MembershipType,
-    nullable: false,
-    default: MembershipType.FREE,
-  })
-  membershipType: MembershipType;
+  @Column({ nullable: false })
+  name: string;
 
   @Column({ default: false, nullable: false })
   isPasswordForgot: boolean;
@@ -57,9 +52,12 @@ export class Login {
   @Column({
     type: 'enum',
     enum: PERMISSIONS_TYPE,
-    default: PERMISSIONS_TYPE.PENDING,
+    default: PERMISSIONS_TYPE.ACTIVE,
   })
-  profileStatus: PERMISSIONS_TYPE;
+  status: PERMISSIONS_TYPE;
+
+  @Column({ default: 0 })
+  totalAgreements: number;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

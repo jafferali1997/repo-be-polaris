@@ -28,7 +28,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       migrations: [__dirname + '/../../typeorm-migrations/*.{ts,js}'],
       entities: [__dirname + '/../**/entity/*.{ts,js}'],
       migrationsTableName: 'typeorm_migrations',
-      // ssl: configuration.get<boolean>('SSL_SYNC'),
+      ssl: configuration.get<boolean>('SSL_SYNC'),
       synchronize: this.config.get<boolean>('DATABASE_SYNC'), // never use TRUE in production!
     };
   }
@@ -47,7 +47,7 @@ export const dataSourceOptions: DataSourceOptions = {
   migrations: ['dist/db/migrations/*.js'],
   maxQueryExecutionTime: 300,
   migrationsTableName: 'typeorm_migrations',
-  // ssl: configuration.get<boolean>('SSL_SYNC'),
+  ssl: configuration.get<boolean>('SSL_SYNC'),
 };
 
 const dataSource = new DataSource(dataSourceOptions);
