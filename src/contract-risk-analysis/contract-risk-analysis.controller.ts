@@ -1,3 +1,6 @@
+import { Roles } from '@/common/decorators/roles.decorator';
+import { RoleType } from '@/constants';
+import { AllAuthGuard } from '@/guards/AllAuthGuard.guard';
 import {
   Controller,
   Get,
@@ -6,6 +9,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ContractRiskAnalysisService } from './contract-risk-analysis.service';
@@ -20,6 +24,8 @@ export class ContractRiskAnalysisController {
   ) {}
 
   @Post()
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN, RoleType.USER)
   create(@Body() createContractRiskAnalysisDto: CreateContractRiskAnalysisDto) {
     return this.contractRiskAnalysisService.create(
       createContractRiskAnalysisDto,
@@ -27,16 +33,22 @@ export class ContractRiskAnalysisController {
   }
 
   @Get()
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN, RoleType.USER)
   findAll() {
     return this.contractRiskAnalysisService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN, RoleType.USER)
   findOne(@Param('id') id: string) {
     return this.contractRiskAnalysisService.findOne(+id);
   }
 
   @Patch(':id')
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN, RoleType.USER)
   update(
     @Param('id') id: string,
     @Body() updateContractRiskAnalysisDto: UpdateContractRiskAnalysisDto,
@@ -48,6 +60,8 @@ export class ContractRiskAnalysisController {
   }
 
   @Delete(':id')
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN, RoleType.USER)
   remove(@Param('id') id: string) {
     return this.contractRiskAnalysisService.remove(+id);
   }

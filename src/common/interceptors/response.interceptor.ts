@@ -22,11 +22,12 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
         return {
           succeeded: true,
           totalRecords: value ? value.totalRecords : 0,
-          statusCode: value?.status
-            ? value.status
-            : context.switchToHttp().getRequest().method === 'POST'
-            ? 201
-            : 200,
+          statusCode:
+            value?.status && value.totalRecords
+              ? value.status
+              : context.switchToHttp().getRequest().method === 'POST'
+              ? 201
+              : 200,
           message: value?.message ? value.message : 'Operation successful',
           data: value?.data ? value.data : value,
           meta: value?.meta ? value?.meta : null,
