@@ -12,7 +12,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, appOptions);
   const PORT: number = parseInt(process.env.PORT, 10) || 3000;
   app.setGlobalPrefix('api/');
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3002',
+    ],
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -24,10 +30,10 @@ async function bootstrap() {
     }),
   );
   const config = new DocumentBuilder()
-    .setTitle('Soulmi')
-    .setDescription('Soulmi matrimonial apis.')
+    .setTitle('Polaris')
+    .setDescription('Polaris matrimonial apis.')
     .setVersion('1.0')
-    .addTag('Soulmi')
+    .addTag('Polaris')
     .addBearerAuth()
     .build();
 
