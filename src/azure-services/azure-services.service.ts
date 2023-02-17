@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
 import { uuid } from 'uuidv4';
 import { ConfigService } from '@nestjs/config';
@@ -26,14 +26,14 @@ export class AzureBlobService {
   async uploadFiles(file, containerName: string) {
     try {
       this.containerName = containerName;
-      const blobClient = this.getBlobClient(this.containerName);
+      const { originalname } = file;
+      const imgUrl: string = uuid() + originalname;
+      const blobClient = this.getBlobClient(imgUrl);
 
-      const buffer = Buffer.from(file, 'base64');
-
-      const blockBlobClient = blobClient.getBlockBlobClient();
-      await blockBlobClient.upload(buffer, buffer.length);
+      await blobClient.uploadData(file.buffer);
+      return imgUrl;
     } catch (err: any) {
-      console.log('operation failed', err.message);
+      throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
     }
   }
 

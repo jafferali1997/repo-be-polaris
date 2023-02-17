@@ -7,13 +7,15 @@ export class UploadService {
   containerName = process.env.AZURE_BLOB_CONTAINER;
 
   async create(file): Promise<any> {
+    console.log(file);
     const response = await this.azureBlobService.uploadFiles(
-      file,
+      file[0],
       this.containerName,
     );
 
     //if (file.length === 1) return response.join('');
 
+    console.log(response);
     return response;
   }
 

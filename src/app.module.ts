@@ -28,8 +28,8 @@ import { AzureServicesModule } from './azure-services/azure-services.module';
     ContractRiskAnalysisModule,
     GoogleOauthModule,
     FacebookOauthModule,
-    // UploadModule,
-    // AzureServicesModule,
+    UploadModule,
+    AzureServicesModule,
   ],
   controllers: [AppController],
   providers: [
