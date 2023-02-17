@@ -9,7 +9,10 @@ import {
   OneToMany,
   UpdateDateColumn,
   CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Login } from './login.entity';
 
 @Entity('risk-result') //explicitly setting table name
 export class RiskResult {
@@ -17,7 +20,25 @@ export class RiskResult {
   id: number;
 
   @Column()
-  testResult: string;
+  summaryAnalysis: string;
+
+  @Column()
+  summaryText: string;
+
+  @Column()
+  clauses: string;
+
+  @Column()
+  indicatorPerClause: string;
+
+  @Column()
+  summaryOutput: string;
+
+  @Column()
+  imageUrl: string;
+
+  @Column({ default: null })
+  deletedAt: Date;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
@@ -28,4 +49,8 @@ export class RiskResult {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
+
+  @ManyToOne(() => Login, (login) => login.riskResult)
+  @JoinColumn()
+  login: Login;
 }

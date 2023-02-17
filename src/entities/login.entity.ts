@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
 } from 'typeorm';
+import { RiskResult } from './risk-result.entity';
 
 @Entity('login') //explicitly setting table name
 export class Login {
@@ -58,6 +59,13 @@ export class Login {
 
   @Column({ default: 0 })
   totalAgreements: number;
+
+  @OneToMany(() => RiskResult, (riskResult) => riskResult.login, {
+    // eager: true,
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  riskResult: RiskResult[];
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

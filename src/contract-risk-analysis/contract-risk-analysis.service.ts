@@ -1,6 +1,12 @@
+import { RoleType } from '@/constants';
 import { RiskResult } from '@/entities/risk-result.entity';
 import { HttpService } from '@nestjs/axios';
-import { HttpServer, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpServer,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
@@ -16,18 +22,12 @@ export class ContractRiskAnalysisService {
   ) {}
   async create(createContractRiskAnalysisDto: CreateContractRiskAnalysisDto) {
     try {
-      const Image = await firstValueFrom(
-        this.httpService.post(
-          'https://squid-app-jfdd5.ondigitalocean.app/',
-          createContractRiskAnalysisDto,
-        ),
-      );
       const postResult = await this.riskResultRepo.save({
-        testResult: JSON.stringify(Image),
+        ...createContractRiskAnalysisDto,
       });
-      return Image;
+      return postResult;
     } catch (e) {
-      return e;
+      throw new HttpException('Data not saved', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -35,18 +35,36 @@ export class ContractRiskAnalysisService {
     return await this.riskResultRepo.find({});
   }
 
-  async findOne(id: number) {
-    return await this.riskResultRepo.find({ where: { id } });
+  async findOne(id: number, req: any) {
+    if (req.user.role === RoleType.USER) {
+      return await this.riskResultRepo.find({
+        where: { id, login: { id: req.user.id }, deletedAt: null },
+        relations: {
+          login: true,
+        },
+      });
+    }
+    return await this.riskResultRepo.find({ where: { id, deletedAt: null } });
   }
 
-  update(
-    id: number,
-    updateContractRiskAnalysisDto: UpdateContractRiskAnalysisDto,
-  ) {
-    return `This action updates a #${id} contractRiskAnalysis`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} contractRiskAnalysis`;
+  async remove(id: number, req: any) {
+    if (req.user.role === RoleType.USER) {
+      const user = await this.riskResultRepo.find({
+        where: { id, login: { id: req.user.id }, deletedAt: null },
+        relations: {
+          login: true,
+        },
+      });
+      if (!user)
+        throw new HttpException('cannot delete record', HttpStatus.BAD_REQUEST);
+      return await this.riskResultRepo.update(
+        { id },
+        { deletedAt: new Date() },
+      );
+    }
+    return await this.riskResultRepo.update(
+      { id, deletedAt: null },
+      { deletedAt: new Date() },
+    );
   }
 }
