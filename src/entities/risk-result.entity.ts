@@ -20,6 +20,12 @@ export class RiskResult {
   id: number;
 
   @Column()
+  agreementName: string;
+
+  @Column()
+  catagory: string;
+
+  @Column()
   summaryAnalysis: string;
 
   @Column()

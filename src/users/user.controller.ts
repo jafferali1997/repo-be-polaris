@@ -5,6 +5,7 @@ import {
   Get,
   Post,
   Body,
+  Param,
   UseGuards,
   Req,
   Query,
@@ -64,8 +65,21 @@ export class UsersController {
   @UseGuards(AllAuthGuard)
   @Roles(RoleType.ADMIN)
   @ApiBearerAuth()
-  async updateUsers(@Body() updateData: UserToUpdate, @Query('id') id: number) {
+  async updateUsers(@Body() updateData: UserToUpdate, @Param('id') id: number) {
     const result = await this.usersService.patchUser(updateData, id);
+    return result;
+  }
+
+  @Patch('/:id')
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN, RoleType.USER)
+  @ApiBearerAuth()
+  async updateUserName(
+    @Body() updateData: { name: string },
+    @Param('id') id: number,
+    @Req() req: number,
+  ) {
+    const result = await this.usersService.patchUserName(updateData, id, req);
     return result;
   }
 

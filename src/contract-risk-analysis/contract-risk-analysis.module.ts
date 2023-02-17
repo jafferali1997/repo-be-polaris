@@ -7,9 +7,10 @@ import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from '@/auth/auth.service';
 import { UtilitiesService } from '@/helpers';
+import { Login } from '@/entities';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RiskResult]), HttpModule],
+  imports: [TypeOrmModule.forFeature([RiskResult, Login]), HttpModule],
   controllers: [ContractRiskAnalysisController],
   providers: [
     ContractRiskAnalysisService,

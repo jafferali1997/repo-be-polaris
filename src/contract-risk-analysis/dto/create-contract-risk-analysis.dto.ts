@@ -3,6 +3,12 @@ import { UploadedFiles } from '@nestjs/common/decorators';
 
 export class CreateContractRiskAnalysisDto {
   @ApiProperty()
+  agreementName: string;
+
+  @ApiProperty()
+  catagory: string;
+
+  @ApiProperty()
   summaryAnalysis: string;
 
   @ApiProperty()

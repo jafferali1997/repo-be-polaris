@@ -63,6 +63,7 @@ export class UploadController {
     file: Express.Multer.File,
     @Req() req: any,
   ) {
+    console.log(file);
     return await this.uploadService.create(file, req.user);
   }
   @Get('read-image')

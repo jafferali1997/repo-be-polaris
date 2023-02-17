@@ -338,6 +338,32 @@ export class UsersService {
 
     return await this.loginRepository.update({ id }, { ...updateData });
   }
+  async patchUserName(updateData: any, id: number, req) {
+    if (req.user.role === RoleType.USER) {
+      const user = await this.loginRepository.findOne({
+        where: { id: req.user.id },
+      });
+      if (!user)
+        throw new HttpException(
+          'No user found in database to update',
+          HttpStatus.NOT_FOUND,
+        );
+
+      return await this.loginRepository.update(
+        { id: req.user.id },
+        { ...updateData },
+      );
+    }
+
+    const user = await this.loginRepository.findOne({ where: { id } });
+    if (!user)
+      throw new HttpException(
+        'No user found in database to update',
+        HttpStatus.NOT_FOUND,
+      );
+
+    return await this.loginRepository.update({ id }, { ...updateData });
+  }
 
   async deleteUser(userId: number): Promise<any> {
     const user = await this.loginRepository.findOne({
