@@ -1,4 +1,5 @@
 import { RoleType } from '@/constants';
+import { Login } from '@/entities';
 import { RiskResult } from '@/entities/risk-result.entity';
 import { HttpService } from '@nestjs/axios';
 import {
@@ -19,12 +20,22 @@ export class ContractRiskAnalysisService {
     private readonly httpService: HttpService,
     @InjectRepository(RiskResult)
     private readonly riskResultRepo: Repository<RiskResult>,
+    @InjectRepository(Login)
+    private readonly loginRepo: Repository<Login>,
   ) {}
-  async create(createContractRiskAnalysisDto: CreateContractRiskAnalysisDto) {
+  async create(
+    createContractRiskAnalysisDto: CreateContractRiskAnalysisDto,
+    user,
+  ) {
     try {
       const postResult = await this.riskResultRepo.save({
         ...createContractRiskAnalysisDto,
       });
+      const [name, count] = await this.riskResultRepo.findAndCount({
+        where: { login: { id: user.id }, deletedAt: null },
+        relations: { login: true },
+      });
+      await this.loginRepo.update({ id: user.id }, { totalAgreements: count });
       return postResult;
     } catch (e) {
       throw new HttpException('Data not saved', HttpStatus.BAD_REQUEST);
@@ -65,14 +76,29 @@ export class ContractRiskAnalysisService {
       });
       if (!user)
         throw new HttpException('cannot delete record', HttpStatus.BAD_REQUEST);
-      return await this.riskResultRepo.update(
-        { id },
-        { deletedAt: new Date() },
+      await this.riskResultRepo.update({ id }, { deletedAt: new Date() });
+      const [name, count] = await this.riskResultRepo.findAndCount({
+        where: { login: { id: req.user.id }, deletedAt: null },
+        relations: { login: true },
+      });
+      await this.loginRepo.update(
+        { id: req.user.id },
+        { totalAgreements: count },
       );
+      return 'deleted id:' + id;
     }
-    return await this.riskResultRepo.update(
+    await this.riskResultRepo.update(
       { id, deletedAt: null },
       { deletedAt: new Date() },
     );
+    const [name, count] = await this.riskResultRepo.findAndCount({
+      where: { login: { id: req.user.id }, deletedAt: null },
+      relations: { login: true },
+    });
+    await this.loginRepo.update(
+      { id: req.user.id },
+      { totalAgreements: count },
+    );
+    return 'deleted id:' + id;
   }
 }

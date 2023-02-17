@@ -28,9 +28,13 @@ export class ContractRiskAnalysisController {
   @Roles(RoleType.ADMIN, RoleType.USER)
   @ApiBearerAuth()
   @Post()
-  create(@Body() createContractRiskAnalysisDto: CreateContractRiskAnalysisDto) {
+  create(
+    @Req() req: any,
+    @Body() createContractRiskAnalysisDto: CreateContractRiskAnalysisDto,
+  ) {
     return this.contractRiskAnalysisService.create(
       createContractRiskAnalysisDto,
+      req.user,
     );
   }
 
