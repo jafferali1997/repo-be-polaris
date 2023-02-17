@@ -14,6 +14,8 @@ import { TypeOrmConfigService } from './config/db.service';
 import { ContractRiskAnalysisModule } from './contract-risk-analysis/contract-risk-analysis.module';
 import { GoogleOauthModule } from './google-oauth/google-oauth.module';
 import { FacebookOauthModule } from './facebook-oauth/facebook-oauth.module';
+import { UploadModule } from './upload/upload.module';
+import { AzureServicesModule } from './azure-services/azure-services.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { FacebookOauthModule } from './facebook-oauth/facebook-oauth.module';
     ContractRiskAnalysisModule,
     GoogleOauthModule,
     FacebookOauthModule,
+    // UploadModule,
+    // AzureServicesModule,
   ],
   controllers: [AppController],
   providers: [

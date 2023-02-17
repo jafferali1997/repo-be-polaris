@@ -100,7 +100,8 @@ export class UsersService {
       const user = this.loginRepository.create({
         email: email,
         password: encodedPassword,
-        emailVerifyOtp: otp,
+        emailVerifyOtp: this.helper.encodeOtp(otp),
+        emailVerifyOtpExpiryTime: this.helper.addMinutes(10),
         role: RoleType.USER,
         name,
       });
