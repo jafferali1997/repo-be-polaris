@@ -6,6 +6,8 @@ import {
   UseInterceptors,
   Res,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -13,6 +15,9 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { Multer } from 'multer';
 import { UploadedFiles } from '@nestjs/common/decorators';
+import { AllAuthGuard } from '@/guards/AllAuthGuard.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { RoleType } from '@/constants';
 
 @ApiTags('File Upload')
 @Controller('user-upload')
@@ -23,6 +28,8 @@ export class UploadController {
 
   @UseInterceptors(FilesInterceptor('file'))
   @Post('file')
+  // @UseGuards(AllAuthGuard)
+  // @Roles(RoleType.ADMIN, RoleType.USER)
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -54,8 +61,9 @@ export class UploadController {
   async uploadFile(
     @UploadedFiles()
     file: Express.Multer.File,
+    @Req() req: any,
   ) {
-    return await this.uploadService.create(file);
+    return await this.uploadService.create(file, req.user);
   }
   @Get('read-image')
   async readImage(@Res() res: object, @Query('filename') filename: string) {

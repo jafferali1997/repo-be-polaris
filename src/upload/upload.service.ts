@@ -6,7 +6,7 @@ export class UploadService {
   constructor(private readonly azureBlobService: AzureBlobService) {}
   containerName = process.env.AZURE_BLOB_CONTAINER;
 
-  async create(file): Promise<any> {
+  async create(file, user): Promise<any> {
     console.log(file);
     const response = await this.azureBlobService.uploadFiles(
       file[0],
