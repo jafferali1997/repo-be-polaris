@@ -12,7 +12,7 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ContractRiskAnalysisService } from './contract-risk-analysis.service';
 import { CreateContractRiskAnalysisDto } from './dto/create-contract-risk-analysis.dto';
 import { UpdateContractRiskAnalysisDto } from './dto/update-contract-risk-analysis.dto';
@@ -24,32 +24,36 @@ export class ContractRiskAnalysisController {
     private readonly contractRiskAnalysisService: ContractRiskAnalysisService,
   ) {}
 
-  @Post()
   @UseGuards(AllAuthGuard)
   @Roles(RoleType.ADMIN, RoleType.USER)
+  @ApiBearerAuth()
+  @Post()
   create(@Body() createContractRiskAnalysisDto: CreateContractRiskAnalysisDto) {
     return this.contractRiskAnalysisService.create(
       createContractRiskAnalysisDto,
     );
   }
 
-  @Get()
-  @UseGuards(AllAuthGuard)
-  @Roles(RoleType.ADMIN)
-  findAll() {
-    return this.contractRiskAnalysisService.findAll();
-  }
-
-  @Get(':id')
   @UseGuards(AllAuthGuard)
   @Roles(RoleType.ADMIN, RoleType.USER)
+  @ApiBearerAuth()
+  @Get()
+  findAll(@Req() req: any) {
+    return this.contractRiskAnalysisService.findAll(req.user);
+  }
+
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN, RoleType.USER)
+  @ApiBearerAuth()
+  @Get(':id')
   findOne(@Param('id') id: string, @Req() req) {
     return this.contractRiskAnalysisService.findOne(+id, req);
   }
 
-  @Delete(':id')
   @UseGuards(AllAuthGuard)
   @Roles(RoleType.ADMIN, RoleType.USER)
+  @ApiBearerAuth()
+  @Delete(':id')
   remove(@Param('id') id: string, @Req() req: any) {
     return this.contractRiskAnalysisService.remove(+id, req);
   }

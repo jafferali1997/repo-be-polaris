@@ -31,7 +31,15 @@ export class ContractRiskAnalysisService {
     }
   }
 
-  async findAll() {
+  async findAll(user) {
+    if (user.role === RoleType.USER) {
+      return await this.riskResultRepo.find({
+        where: { login: { id: user.id }, deletedAt: null },
+        relations: {
+          login: true,
+        },
+      });
+    }
     return await this.riskResultRepo.find({});
   }
 
