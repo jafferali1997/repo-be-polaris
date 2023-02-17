@@ -30,6 +30,7 @@ import { VerifyEmailOtpDto } from './dto/VerifyEmailOtpDto.dto';
 import { ChangePasswordDto } from './dto/ChangePassword.dto';
 import { VerifyEmailDto } from './dto/VerifyEmailDto.dto';
 import { UserToUpdate } from './dto/UpdateUserByAdmin.dto';
+import { UpdateUserName } from './dto/UpdateUserName.dto';
 // import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('users') //used to make the blocks of specific apis in swagger
@@ -70,12 +71,12 @@ export class UsersController {
     return result;
   }
 
-  @Patch('/:id')
+  @Patch('/name/:id')
   @UseGuards(AllAuthGuard)
   @Roles(RoleType.ADMIN, RoleType.USER)
   @ApiBearerAuth()
   async updateUserName(
-    @Body() updateData: { name: string },
+    @Body() updateData: UpdateUserName,
     @Param('id') id: number,
     @Req() req: number,
   ) {
