@@ -28,9 +28,10 @@ export class ContractRiskAnalysisService {
     user,
   ) {
     try {
-      const postResult = await this.riskResultRepo.save({
+      const postResult = this.riskResultRepo.create({
         ...createContractRiskAnalysisDto,
       });
+      await this.riskResultRepo.save(postResult);
       const [name, count] = await this.riskResultRepo.findAndCount({
         where: { login: { id: user.id }, deletedAt: null },
         relations: { login: true },

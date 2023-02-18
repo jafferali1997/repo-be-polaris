@@ -6,4 +6,8 @@ export class UpdateUserName {
   @ApiProperty()
   @IsString()
   name: string;
+
+  @ApiProperty()
+  @IsString()
+  profileUrl: string;
 }

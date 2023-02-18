@@ -1,0 +1,5 @@
+export enum DOCUMENT_TYPE {
+  RISKY,
+  PARTIALLY_RISKY,
+  SAFE,
+}

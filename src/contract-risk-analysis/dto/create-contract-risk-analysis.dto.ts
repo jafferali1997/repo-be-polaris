@@ -1,28 +1,37 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UploadedFiles } from '@nestjs/common/decorators';
+import { IsString } from 'class-validator';
 
 export class CreateContractRiskAnalysisDto {
   @ApiProperty()
+  @IsString()
   agreementName: string;
 
   @ApiProperty()
+  @IsString()
   catagory: string;
 
   @ApiProperty()
+  @IsString()
   summaryAnalysis: string;
 
   @ApiProperty()
+  @IsString()
   summaryText: string;
 
   @ApiProperty()
+  @IsString()
   clauses: string;
 
   @ApiProperty()
+  @IsString()
   indicatorPerClause: string;
 
   @ApiProperty()
+  @IsString()
   summaryOutput: string;
 
   @ApiProperty()
+  @IsString()
   imageUrl: string;
 }

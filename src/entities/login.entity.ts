@@ -42,6 +42,9 @@ export class Login {
   emailVerifyOtp: string;
 
   @Column({ default: null })
+  profileUrl: string;
+
+  @Column({ default: null })
   emailVerifyOtpExpiryTime: Date;
 
   @Column({ default: null })
