@@ -1,5 +1,10 @@
-export enum DOCUMENT_TYPE {
-  RISKY,
-  PARTIALLY_RISKY,
-  SAFE,
+export enum CATEGORY_TYPE {
+  'Commercial_lease',
+  'Consumer_Credit',
+  'Credit_Card',
+  'Employment',
+  'Insurance',
+  'Mortgage',
+  'Residential',
+  'Service',
 }

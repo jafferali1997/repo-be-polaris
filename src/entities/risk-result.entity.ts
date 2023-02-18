@@ -13,6 +13,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Login } from './login.entity';
+import { CATEGORY_TYPE } from '@/constants/category-type';
 
 @Entity('risk-result') //explicitly setting table name
 export class RiskResult {
@@ -22,8 +23,8 @@ export class RiskResult {
   @Column()
   agreementName: string;
 
-  @Column()
-  catagory: string;
+  @Column({ type: 'enum', enum: CATEGORY_TYPE, nullable: true })
+  catagory: CATEGORY_TYPE;
 
   @Column()
   summaryAnalysis: string;

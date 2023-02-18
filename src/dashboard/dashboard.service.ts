@@ -25,7 +25,7 @@ export class DashboardService {
       where: {
         login: { id: req.user.id },
         deletedAt: null,
-        summaryOutput: 'Risky',
+        summaryOutput: 'RISKY',
       },
       relations: { login: true },
     });
@@ -33,7 +33,7 @@ export class DashboardService {
       where: {
         login: { id: req.user.id },
         deletedAt: null,
-        summaryOutput: 'PartiallyRisky',
+        summaryOutput: 'PARTIALLY RISKY',
       },
       relations: { login: true },
     });
@@ -41,7 +41,7 @@ export class DashboardService {
       where: {
         login: { id: req.user.id },
         deletedAt: null,
-        summaryOutput: 'Safe',
+        summaryOutput: 'SAFE',
       },
       relations: { login: true },
     });
@@ -77,19 +77,19 @@ export class DashboardService {
     const [, allTotalCountRisky] = await this.riskRepo.findAndCount({
       where: {
         deletedAt: null,
-        summaryOutput: 'Risky',
+        summaryOutput: 'RISKY',
       },
     });
     const [, allTotalCountParRisky] = await this.riskRepo.findAndCount({
       where: {
         deletedAt: null,
-        summaryOutput: 'PartiallyRisky',
+        summaryOutput: 'PARTIALLY RISKY',
       },
     });
     const [, allTotalCountSafe] = await this.riskRepo.findAndCount({
       where: {
         deletedAt: null,
-        summaryOutput: 'Safe',
+        summaryOutput: 'SAFE',
       },
     });
     const { totalCount, totalCountParRisky, totalCountRisky, totalCountSafe } =

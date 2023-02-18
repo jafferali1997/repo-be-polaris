@@ -53,7 +53,11 @@ export class ContractRiskAnalysisService {
         },
       });
     }
-    return await this.riskResultRepo.find({ where: { deletedAt: IsNull() } });
+    return await this.riskResultRepo.find({
+      where: { deletedAt: IsNull() },
+      select: { login: { name: true } },
+      relations: { login: true },
+    });
   }
 
   async findOne(id: number, req: any) {

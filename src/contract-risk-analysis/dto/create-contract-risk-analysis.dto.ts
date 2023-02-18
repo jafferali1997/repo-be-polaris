@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UploadedFiles } from '@nestjs/common/decorators';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateContractRiskAnalysisDto {
   @ApiProperty()
@@ -8,8 +8,8 @@ export class CreateContractRiskAnalysisDto {
   agreementName: string;
 
   @ApiProperty()
-  @IsString()
-  catagory: string;
+  @IsNumber()
+  catagory: number;
 
   @ApiProperty()
   @IsString()
