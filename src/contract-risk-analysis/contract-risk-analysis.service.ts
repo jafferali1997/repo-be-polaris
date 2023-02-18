@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
-import { Repository } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { CreateContractRiskAnalysisDto } from './dto/create-contract-risk-analysis.dto';
 import { UpdateContractRiskAnalysisDto } from './dto/update-contract-risk-analysis.dto';
 
@@ -29,11 +29,12 @@ export class ContractRiskAnalysisService {
   ) {
     try {
       const postResult = this.riskResultRepo.create({
+        login: user,
         ...createContractRiskAnalysisDto,
       });
       await this.riskResultRepo.save(postResult);
       const [name, count] = await this.riskResultRepo.findAndCount({
-        where: { login: { id: user.id }, deletedAt: null },
+        where: { login: { id: user.id }, deletedAt: IsNull() },
         relations: { login: true },
       });
       await this.loginRepo.update({ id: user.id }, { totalAgreements: count });
@@ -46,40 +47,43 @@ export class ContractRiskAnalysisService {
   async findAll(user) {
     if (user.role === RoleType.USER) {
       return await this.riskResultRepo.find({
-        where: { login: { id: user.id }, deletedAt: null },
+        where: { login: { id: user.id }, deletedAt: IsNull() },
         relations: {
           login: true,
         },
       });
     }
-    return await this.riskResultRepo.find({});
+    return await this.riskResultRepo.find({ where: { deletedAt: IsNull() } });
   }
 
   async findOne(id: number, req: any) {
     if (req.user.role === RoleType.USER) {
       return await this.riskResultRepo.find({
-        where: { id, login: { id: req.user.id }, deletedAt: null },
+        where: { id, login: { id: req.user.id }, deletedAt: IsNull() },
         relations: {
           login: true,
         },
       });
     }
-    return await this.riskResultRepo.find({ where: { id, deletedAt: null } });
+    return await this.riskResultRepo.find({
+      where: { id, deletedAt: IsNull() },
+    });
   }
 
   async remove(id: number, req: any) {
+    const dateNow = new Date();
     if (req.user.role === RoleType.USER) {
       const user = await this.riskResultRepo.find({
-        where: { id, login: { id: req.user.id }, deletedAt: null },
+        where: { id, login: { id: req.user.id }, deletedAt: IsNull() },
         relations: {
           login: true,
         },
       });
       if (!user)
         throw new HttpException('cannot delete record', HttpStatus.BAD_REQUEST);
-      await this.riskResultRepo.update({ id }, { deletedAt: new Date() });
+      await this.riskResultRepo.update({ id }, { deletedAt: dateNow });
       const [name, count] = await this.riskResultRepo.findAndCount({
-        where: { login: { id: req.user.id }, deletedAt: null },
+        where: { login: { id: req.user.id }, deletedAt: IsNull() },
         relations: { login: true },
       });
       await this.loginRepo.update(
@@ -88,12 +92,20 @@ export class ContractRiskAnalysisService {
       );
       return 'deleted id:' + id;
     }
-    await this.riskResultRepo.update(
-      { id, deletedAt: null },
-      { deletedAt: new Date() },
+    const user = await this.riskResultRepo.find({
+      where: { id, deletedAt: IsNull() },
+      relations: {
+        login: true,
+      },
+    });
+    if (!user)
+      throw new HttpException('cannot delete record', HttpStatus.BAD_REQUEST);
+    const upda = await this.riskResultRepo.update(
+      { id },
+      { deletedAt: dateNow },
     );
     const [name, count] = await this.riskResultRepo.findAndCount({
-      where: { login: { id: req.user.id }, deletedAt: null },
+      where: { login: { id: req.user.id }, deletedAt: IsNull() },
       relations: { login: true },
     });
     await this.loginRepo.update(
