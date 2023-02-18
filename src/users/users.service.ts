@@ -338,6 +338,7 @@ export class UsersService {
 
     return await this.loginRepository.update({ id }, { ...updateData });
   }
+
   async patchUserName(updateData: any, id: number, req) {
     if (req.user.role === RoleType.USER) {
       const user = await this.loginRepository.findOne({
@@ -376,7 +377,7 @@ export class UsersService {
     }
   }
 
-  async forgotPassword(forgotPassword: ForgotPasswordDto): Promise<void> {
+  async forgotPassword(forgotPassword: ForgotPasswordDto): Promise<any> {
     const { email } = forgotPassword;
     const isEmailInDB = await this.loginRepository.findOneBy({ email: email });
 
@@ -392,7 +393,8 @@ export class UsersService {
         .returning('*')
         .execute();
 
-      return await this.helper.sendEmail(isEmailInDB.email, `OTP: ${otp}`);
+      await this.helper.sendEmail(isEmailInDB.email, `OTP: ${otp}`);
+      return { message: 'OTP Sent', data: null };
     }
     throw new HttpException('User does not Exist', HttpStatus.NOT_FOUND);
   }
