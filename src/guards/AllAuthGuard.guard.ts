@@ -43,7 +43,7 @@ export class AllAuthGuard implements CanActivate {
         const user = await this.loginRepository.findUserByArgs({
           where: { email: jwtUserData.email },
         });
-        if (requireRoles) {
+        if (requireRoles && user.status === 'ACTIVE') {
           context.switchToHttp().getRequest()['user'] = user;
           return requireRoles.some((role) => [user.role].includes(role));
         }

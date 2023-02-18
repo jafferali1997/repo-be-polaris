@@ -48,6 +48,7 @@ export class ContractRiskAnalysisService {
     if (user.role === RoleType.USER) {
       return await this.riskResultRepo.find({
         where: { login: { id: user.id }, deletedAt: IsNull() },
+        select: { login: { name: true } },
         relations: {
           login: true,
         },
@@ -64,6 +65,7 @@ export class ContractRiskAnalysisService {
     if (req.user.role === RoleType.USER) {
       return await this.riskResultRepo.find({
         where: { id, login: { id: req.user.id }, deletedAt: IsNull() },
+        select: { login: { name: true } },
         relations: {
           login: true,
         },
@@ -71,6 +73,10 @@ export class ContractRiskAnalysisService {
     }
     return await this.riskResultRepo.find({
       where: { id, deletedAt: IsNull() },
+      select: { login: { name: true } },
+      relations: {
+        login: true,
+      },
     });
   }
 

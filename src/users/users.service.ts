@@ -335,7 +335,6 @@ export class UsersService {
         'No user found in database to update',
         HttpStatus.NOT_FOUND,
       );
-
     return await this.loginRepository.update({ id }, { ...updateData });
   }
 
