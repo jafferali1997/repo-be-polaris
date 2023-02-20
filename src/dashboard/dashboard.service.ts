@@ -131,7 +131,7 @@ export class DashboardService {
         .where("DATE_PART('year', entity.createdAt) = :year", {
           year: new Date().getFullYear(),
         })
-        .where('entity.summaryAnalysis = RISKY')
+        .where('entity.summaryAnalysis = :analysis', { analysis: 'RISKY' })
         .groupBy("DATE_PART('month', entity.createdAt)");
 
       const resultForRisky = await queryForRisky.getRawMany();
@@ -144,7 +144,9 @@ export class DashboardService {
         .where("DATE_PART('year', entity.createdAt) = :year", {
           year: new Date().getFullYear(),
         })
-        .where('entity.summaryAnalysis = PARTIALLY RISKY')
+        .where('entity.summaryAnalysis = :analysis', {
+          analysis: 'PARTIALLY RISKY',
+        })
         .groupBy("DATE_PART('month', entity.createdAt)");
 
       const resultForPartiallyRisky = await queryForPartiallyRisky.getRawMany();
@@ -157,7 +159,7 @@ export class DashboardService {
         .where("DATE_PART('year', entity.createdAt) = :year", {
           year: new Date().getFullYear(),
         })
-        .where('entity.summaryAnalysis = SAFE')
+        .where('entity.summaryAnalysis = :analysis', { analysis: 'SAFE' })
         .groupBy("DATE_PART('month', entity.createdAt)");
 
       const resultForSafe = await queryForSafe.getRawMany();
@@ -176,7 +178,7 @@ export class DashboardService {
       .where("DATE_PART('year', entity.createdAt) = :year", {
         year: new Date().getFullYear(),
       })
-      .where('entity.summaryAnalysis = RISKY')
+      .where('entity.summaryAnalysis = :analysis', { analysis: 'RISKY' })
       .groupBy("DATE_PART('month', entity.createdAt)");
 
     const resultForRisky = await queryForRisky.getRawMany();
@@ -188,7 +190,9 @@ export class DashboardService {
       .where("DATE_PART('year', entity.createdAt) = :year", {
         year: new Date().getFullYear(),
       })
-      .where('entity.summaryAnalysis = PARTIALLY RISKY')
+      .where('entity.summaryAnalysis = :analysis', {
+        analysis: 'PARTIALLY RISKY',
+      })
       .groupBy("DATE_PART('month', entity.createdAt)");
 
     const resultForPartiallyRisky = await queryForPartiallyRisky.getRawMany();
@@ -200,7 +204,7 @@ export class DashboardService {
       .where("DATE_PART('year', entity.createdAt) = :year", {
         year: new Date().getFullYear(),
       })
-      .where('entity.summaryAnalysis = SAFE')
+      .where('entity.summaryAnalysis = :analysis', { analysis: 'SAFE' })
       .groupBy("DATE_PART('month', entity.createdAt)");
 
     const resultForSafe = await queryForSafe.getRawMany();
