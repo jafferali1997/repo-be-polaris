@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
-import { Repository, IsNull } from 'typeorm';
+import { Repository, IsNull, Like } from 'typeorm';
 import { CreateContractRiskAnalysisDto } from './dto/create-contract-risk-analysis.dto';
 import { UpdateContractRiskAnalysisDto } from './dto/update-contract-risk-analysis.dto';
 
@@ -44,10 +44,15 @@ export class ContractRiskAnalysisService {
     }
   }
 
-  async findAll(user) {
+  async findAll(user, search, filter) {
     if (user.role === RoleType.USER) {
       return await this.riskResultRepo.find({
-        where: { login: { id: user.id }, deletedAt: IsNull() },
+        where: {
+          login: { id: user.id },
+          deletedAt: IsNull(),
+          ...(search && { agreementName: Like(search) }),
+          ...(filter && { summaryAnalysis: filter }),
+        },
         select: { login: { name: true } },
         relations: {
           login: true,
@@ -55,7 +60,11 @@ export class ContractRiskAnalysisService {
       });
     }
     return await this.riskResultRepo.find({
-      where: { deletedAt: IsNull() },
+      where: {
+        deletedAt: IsNull(),
+        ...(search && { agreementName: Like(search) }),
+        ...(filter && { summaryAnalysis: filter }),
+      },
       select: { login: { name: true } },
       relations: { login: true },
     });

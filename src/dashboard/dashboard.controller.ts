@@ -34,6 +34,14 @@ export class DashboardController {
     return this.dashboardService.findAll(req);
   }
 
+  @Get('/graph')
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN, RoleType.USER)
+  @ApiBearerAuth()
+  getGraph(@Req() req) {
+    return this.dashboardService.getGraph(req);
+  }
+
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.dashboardService.findOne(+id);

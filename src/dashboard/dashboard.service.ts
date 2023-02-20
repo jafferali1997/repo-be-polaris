@@ -121,6 +121,98 @@ export class DashboardService {
     };
   }
 
+  async getGraph(req) {
+    if (req.user.role === RoleType.USER) {
+      const queryForRisky = this.riskRepo
+        .createQueryBuilder('entity')
+        .select("DATE_PART('month', entity.createdAt)", 'month')
+        .addSelect('COUNT(entity.id)', 'count')
+        .where('loginId = :loginId ', { loginId: req.ueser.id })
+        .where("DATE_PART('year', entity.createdAt) = :year", {
+          year: new Date().getFullYear(),
+        })
+        .where('entity.summaryAnalysis = RISKY')
+        .groupBy("DATE_PART('month', entity.createdAt)");
+
+      const resultForRisky = await queryForRisky.getRawMany();
+
+      const queryForPartiallyRisky = this.riskRepo
+        .createQueryBuilder('entity')
+        .select("DATE_PART('month', entity.createdAt)", 'month')
+        .addSelect('COUNT(entity.id)', 'count')
+        .where('loginId = :loginId ', { loginId: req.ueser.id })
+        .where("DATE_PART('year', entity.createdAt) = :year", {
+          year: new Date().getFullYear(),
+        })
+        .where('entity.summaryAnalysis = PARTIALLY RISKY')
+        .groupBy("DATE_PART('month', entity.createdAt)");
+
+      const resultForPartiallyRisky = await queryForPartiallyRisky.getRawMany();
+
+      const queryForSafe = this.riskRepo
+        .createQueryBuilder('entity')
+        .select("DATE_PART('month', entity.createdAt)", 'month')
+        .addSelect('COUNT(entity.id)', 'count')
+        .where('loginId = :loginId ', { loginId: req.ueser.id })
+        .where("DATE_PART('year', entity.createdAt) = :year", {
+          year: new Date().getFullYear(),
+        })
+        .where('entity.summaryAnalysis = SAFE')
+        .groupBy("DATE_PART('month', entity.createdAt)");
+
+      const resultForSafe = await queryForSafe.getRawMany();
+      return {
+        data: {
+          resultForSafe,
+          resultForPartiallyRisky,
+          resultForRisky,
+        },
+      };
+    }
+    const queryForRisky = this.riskRepo
+      .createQueryBuilder('entity')
+      .select("DATE_PART('month', entity.createdAt)", 'month')
+      .addSelect('COUNT(entity.id)', 'count')
+      .where("DATE_PART('year', entity.createdAt) = :year", {
+        year: new Date().getFullYear(),
+      })
+      .where('entity.summaryAnalysis = RISKY')
+      .groupBy("DATE_PART('month', entity.createdAt)");
+
+    const resultForRisky = await queryForRisky.getRawMany();
+
+    const queryForPartiallyRisky = this.riskRepo
+      .createQueryBuilder('entity')
+      .select("DATE_PART('month', entity.createdAt)", 'month')
+      .addSelect('COUNT(entity.id)', 'count')
+      .where("DATE_PART('year', entity.createdAt) = :year", {
+        year: new Date().getFullYear(),
+      })
+      .where('entity.summaryAnalysis = PARTIALLY RISKY')
+      .groupBy("DATE_PART('month', entity.createdAt)");
+
+    const resultForPartiallyRisky = await queryForPartiallyRisky.getRawMany();
+
+    const queryForSafe = this.riskRepo
+      .createQueryBuilder('entity')
+      .select("DATE_PART('month', entity.createdAt)", 'month')
+      .addSelect('COUNT(entity.id)', 'count')
+      .where("DATE_PART('year', entity.createdAt) = :year", {
+        year: new Date().getFullYear(),
+      })
+      .where('entity.summaryAnalysis = SAFE')
+      .groupBy("DATE_PART('month', entity.createdAt)");
+
+    const resultForSafe = await queryForSafe.getRawMany();
+    return {
+      data: {
+        resultForSafe,
+        resultForPartiallyRisky,
+        resultForRisky,
+      },
+    };
+  }
+
   findByDate(id: number) {
     return `This action returns a #${id} dashboard`;
   }

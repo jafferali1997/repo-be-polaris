@@ -13,6 +13,7 @@ import {
   Req,
   UploadedFiles,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -45,8 +46,12 @@ export class ContractRiskAnalysisController {
   @Roles(RoleType.ADMIN, RoleType.USER)
   @ApiBearerAuth()
   @Get()
-  findAll(@Req() req: any) {
-    return this.contractRiskAnalysisService.findAll(req.user);
+  findAll(
+    @Req() req: any,
+    @Query('search') search: string,
+    @Query('filter') filter: string,
+  ) {
+    return this.contractRiskAnalysisService.findAll(req.user, search, filter);
   }
 
   @UseGuards(AllAuthGuard)
