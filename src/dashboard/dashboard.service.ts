@@ -1,4 +1,4 @@
-import { RoleType } from '@/constants';
+import { PERMISSIONS_TYPE, RoleType } from '@/constants';
 import { Login } from '@/entities';
 import { RiskResult } from '@/entities/risk-result.entity';
 import { Injectable } from '@nestjs/common';
@@ -78,6 +78,12 @@ export class DashboardService {
       where: { deletedAt: null },
     });
     const [, totalUsers] = await this.loginRepo.findAndCount({});
+    const [, totalActiveUsers] = await this.loginRepo.findAndCount({
+      where: { status: PERMISSIONS_TYPE.ACTIVE },
+    });
+    const [, totalInactiveUsers] = await this.loginRepo.findAndCount({
+      where: { status: PERMISSIONS_TYPE.INACTIVE },
+    });
     const [, allTotalCountRisky] = await this.riskRepo.findAndCount({
       where: {
         deletedAt: null,
@@ -109,6 +115,8 @@ export class DashboardService {
         allTotalCountRisky,
         allTotalCountSafe,
         totalUsers,
+        totalInactiveUsers,
+        totalActiveUsers,
       },
     };
   }
