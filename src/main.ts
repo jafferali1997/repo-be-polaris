@@ -18,6 +18,7 @@ async function bootstrap() {
       'http://localhost:3001',
       'http://localhost:3002',
       'https://polaris.xeventechnologies.com',
+      'https://polarisdev.xeventechnologies.com',
     ],
   });
   app.useGlobalPipes(
