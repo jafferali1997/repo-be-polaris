@@ -1,13 +1,4 @@
-import { PERMISSIONS_TYPE } from '@/constants';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, IsNotEmpty } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
+import { UserName } from './UserName.dto';
 
-export class UpdateUserName {
-  @ApiProperty()
-  @IsString()
-  name: string;
-
-  @ApiProperty()
-  @IsString()
-  profileUrl: string;
-}
+export class UpdateUserName extends PartialType(UserName) {}

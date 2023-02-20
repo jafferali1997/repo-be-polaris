@@ -1,4 +1,5 @@
 import { RoleType } from '@/constants';
+import { Login } from '@/entities';
 import { RiskResult } from '@/entities/risk-result.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,6 +12,8 @@ export class DashboardService {
   constructor(
     @InjectRepository(RiskResult)
     private readonly riskRepo: Repository<RiskResult>,
+    @InjectRepository(Login)
+    private readonly loginRepo: Repository<Login>,
   ) {}
   create(createDashboardDto: CreateDashboardDto) {
     return 'This action adds a new dashboard';
@@ -74,6 +77,7 @@ export class DashboardService {
     const [, allTotalCount] = await this.riskRepo.findAndCount({
       where: { deletedAt: null },
     });
+    const [, totalUsers] = await this.loginRepo.findAndCount({});
     const [, allTotalCountRisky] = await this.riskRepo.findAndCount({
       where: {
         deletedAt: null,
@@ -104,6 +108,7 @@ export class DashboardService {
         allTotalCountParRisky,
         allTotalCountRisky,
         allTotalCountSafe,
+        totalUsers,
       },
     };
   }

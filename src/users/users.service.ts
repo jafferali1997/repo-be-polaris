@@ -335,7 +335,9 @@ export class UsersService {
         'No user found in database to update',
         HttpStatus.NOT_FOUND,
       );
-    return await this.loginRepository.update({ id }, { ...updateData });
+    await this.loginRepository.update({ id }, { ...updateData });
+
+    return await this.loginRepository.find({ where: { id } });
   }
 
   async patchUserName(updateData: any, id: number, req) {
@@ -349,10 +351,9 @@ export class UsersService {
           HttpStatus.NOT_FOUND,
         );
 
-      return await this.loginRepository.update(
-        { id: req.user.id },
-        { ...updateData },
-      );
+      await this.loginRepository.update({ id: req.user.id }, { ...updateData });
+
+      return await this.loginRepository.find({ where: { id } });
     }
 
     const user = await this.loginRepository.findOne({ where: { id } });
@@ -361,8 +362,9 @@ export class UsersService {
         'No user found in database to update',
         HttpStatus.NOT_FOUND,
       );
+    await this.loginRepository.update({ id }, { ...updateData });
 
-    return await this.loginRepository.update({ id }, { ...updateData });
+    return await this.loginRepository.find({ where: { id } });
   }
 
   async deleteUser(userId: number): Promise<any> {
