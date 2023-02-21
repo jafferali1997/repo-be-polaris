@@ -31,6 +31,7 @@ import { ChangePasswordDto } from './dto/ChangePassword.dto';
 import { VerifyEmailDto } from './dto/VerifyEmailDto.dto';
 import { UserToUpdate } from './dto/UpdateUserByAdmin.dto';
 import { UpdateUserName } from './dto/UpdateUserName.dto';
+import { UserFilter } from './dto/UserFilter.dto';
 // import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('users') //used to make the blocks of specific apis in swagger
@@ -55,7 +56,7 @@ export class UsersController {
     @Req() req: object,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
-    @Body() body: { search: string },
+    @Body() body: UserFilter,
   ) {
     const options = { limit, page, search: body.search };
     const result = await this.usersService.getAllUsers(req, options);

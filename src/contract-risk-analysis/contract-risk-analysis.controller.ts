@@ -1,3 +1,4 @@
+import { ApiQueryArray } from '@/common/decorators/apiQuery.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { RoleType } from '@/constants';
 import { AllAuthGuard } from '@/guards/AllAuthGuard.guard';
@@ -11,6 +12,8 @@ import {
   Delete,
   UseGuards,
   Req,
+  DefaultValuePipe,
+  ParseIntPipe,
   UploadedFiles,
   UseInterceptors,
   Query,
@@ -42,16 +45,28 @@ export class ContractRiskAnalysisController {
     );
   }
 
+  @Get()
   @UseGuards(AllAuthGuard)
   @Roles(RoleType.ADMIN, RoleType.USER)
   @ApiBearerAuth()
-  @Get()
+  @ApiQueryArray([
+    { name: 'search', type: 'string', required: false },
+    { name: 'filter', type: 'string', required: false },
+  ])
   findAll(
     @Req() req: any,
     @Query('search') search: string,
     @Query('filter') filter: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
   ) {
-    return this.contractRiskAnalysisService.findAll(req.user, search, filter);
+    return this.contractRiskAnalysisService.findAll(
+      req.user,
+      search,
+      filter,
+      page,
+      limit,
+    );
   }
 
   @UseGuards(AllAuthGuard)

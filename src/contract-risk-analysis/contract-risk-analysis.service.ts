@@ -44,9 +44,12 @@ export class ContractRiskAnalysisService {
     }
   }
 
-  async findAll(user, search, filter) {
+  async findAll(user, search, filter, page, limit) {
+    const take = limit || 10;
+    const pages = page || 1;
+    const skip = (pages - 1) * take;
     if (user.role === RoleType.USER) {
-      return await this.riskResultRepo.find({
+      const [data, totalRecords] = await this.riskResultRepo.findAndCount({
         where: {
           login: { id: user.id },
           deletedAt: IsNull(),
@@ -57,9 +60,12 @@ export class ContractRiskAnalysisService {
         relations: {
           login: true,
         },
+        skip: skip,
+        take: take,
       });
+      return { data, totalRecords };
     }
-    return await this.riskResultRepo.find({
+    const [data, totalRecords] = await this.riskResultRepo.findAndCount({
       where: {
         deletedAt: IsNull(),
         ...(search && { agreementName: Like(search) }),
@@ -67,7 +73,10 @@ export class ContractRiskAnalysisService {
       },
       select: { login: { name: true } },
       relations: { login: true },
+      skip: skip,
+      take: take,
     });
+    return { data, totalRecords };
   }
 
   async findOne(id: number, req: any) {
