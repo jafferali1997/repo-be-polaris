@@ -15,9 +15,9 @@ export class AuthController {
     return this.AuthService.login(dto);
   }
 
-  @Post('auth-login')
-  @HttpCode(200)
-  authLogin(@Body() dto: EmailDto) {
-    return this.AuthService.authLogin(dto);
-  }
+  // @Post('auth-login')
+  // @HttpCode(200)
+  // authLogin(@Body() dto: EmailDto) {
+  //   return this.AuthService.authLogin(dto);
+  // }
 }

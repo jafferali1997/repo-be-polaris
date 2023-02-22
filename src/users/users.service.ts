@@ -212,7 +212,7 @@ export class UsersService {
         role: user_email.role,
         name: user_email.name,
         id: user_email.id,
-        //access_token: this.helper.generateToken(user_email),
+        access_token: this.helper.generateToken(user_email),
       };
     }
 
@@ -233,7 +233,7 @@ export class UsersService {
       role: user_email.role,
       id: user_email.id,
       name: user_email.name,
-      //access_token: this.helper.generateToken(user_email),
+      access_token: this.helper.generateToken(user_email),
     };
   }
 
