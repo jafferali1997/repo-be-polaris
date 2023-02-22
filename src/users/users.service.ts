@@ -18,6 +18,7 @@ import { ChangePasswordDto } from './dto/ChangePassword.dto';
 import { RoleType, NOT_FOUND_RESPONSE } from '@/constants';
 import { VerifyEmailDto } from './dto/VerifyEmailDto.dto';
 import { UserToUpdate } from './dto/UpdateUserByAdmin.dto';
+import { EmailDto } from '@/dto/EmailDto.dto';
 
 @Injectable()
 export class UsersService {
@@ -57,7 +58,7 @@ export class UsersService {
     return finalResponse;
   }
 
-  async getUserByEmail(body: LoginDto): Promise<Login> {
+  async getUserByEmail(body: LoginDto | EmailDto): Promise<Login> {
     const { email } = body;
     const user: Login = await this.loginRepository.findOne({
       where: { email },
@@ -210,7 +211,7 @@ export class UsersService {
         email: user_email.email,
         role: user_email.role,
         id: user_email.id,
-        access_token: this.helper.generateToken(user_email),
+        //access_token: this.helper.generateToken(user_email),
       };
     }
 
@@ -229,7 +230,7 @@ export class UsersService {
       email: user_email.email,
       role: user_email.role,
       id: user_email.id,
-      access_token: this.helper.generateToken(user_email),
+      //access_token: this.helper.generateToken(user_email),
     };
   }
 

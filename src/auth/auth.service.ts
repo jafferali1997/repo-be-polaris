@@ -8,6 +8,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
+import { EmailDto } from '@/dto/EmailDto.dto';
 
 @Injectable()
 export class AuthService {
@@ -29,6 +30,18 @@ export class AuthService {
 
     if (!isPasswordValid)
       throw new HttpException('invalid email/password', HttpStatus.CONFLICT);
+    const token: string = this.helper.generateToken(user);
+    const responseWithToken = { ...user, token };
+    const userWithoutPassword = this.helper.excludeOnlyPwd(responseWithToken);
+    return userWithoutPassword;
+  }
+
+  async authLogin(userCredentials: EmailDto) {
+    //console.log(loginCred);
+    const user = await this.userService.getUserByEmail(userCredentials);
+
+    if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+
     const token: string = this.helper.generateToken(user);
     const responseWithToken = { ...user, token };
     const userWithoutPassword = this.helper.excludeOnlyPwd(responseWithToken);
