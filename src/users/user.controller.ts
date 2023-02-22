@@ -32,6 +32,7 @@ import { VerifyEmailDto } from './dto/VerifyEmailDto.dto';
 import { UserToUpdate } from './dto/UpdateUserByAdmin.dto';
 import { UpdateUserName } from './dto/UpdateUserName.dto';
 import { UserFilter } from './dto/UserFilter.dto';
+import { UserOAuthDto } from './dto/UserOAuth.dto';
 // import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('users') //used to make the blocks of specific apis in swagger
@@ -151,6 +152,17 @@ export class UsersController {
   })
   async createUser(@Body() userDto: UserDto) {
     const user = await this.usersService.createUser(userDto);
+    return user;
+  }
+
+  @Post('/oauth-register')
+  // @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    description: 'Created user response',
+    type: UserOAuthDto,
+  })
+  async createOAuth(@Body() userDto: UserOAuthDto) {
+    const user = await this.usersService.createOrFindUserWithGoogle(userDto);
     return user;
   }
 

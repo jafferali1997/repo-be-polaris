@@ -23,6 +23,7 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { ContractRiskAnalysisService } from './contract-risk-analysis.service';
 import { CreateContractRiskAnalysisDto } from './dto/create-contract-risk-analysis.dto';
 import { UpdateContractRiskAnalysisDto } from './dto/update-contract-risk-analysis.dto';
+import { UpdateFinalAnalysisDto } from './dto/update-final-analysis.dto';
 
 @ApiTags('contract-risk-analysis')
 @Controller('contract-risk-analysis')
@@ -75,6 +76,17 @@ export class ContractRiskAnalysisController {
   @Get(':id')
   findOne(@Param('id') id: string, @Req() req) {
     return this.contractRiskAnalysisService.findOne(+id, req);
+  }
+
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN, RoleType.USER)
+  @ApiBearerAuth()
+  @Patch(':id')
+  updateFinalAnalysis(
+    @Body() body: UpdateFinalAnalysisDto,
+    @Param('id') id: string,
+  ) {
+    return this.contractRiskAnalysisService.updateFinalAnalysis(body, +id);
   }
 
   @UseGuards(AllAuthGuard)

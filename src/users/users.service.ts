@@ -197,7 +197,7 @@ export class UsersService {
   // }
 
   async createOrFindUserWithGoogle(payload: any) {
-    const { email, access_token } = payload;
+    const { email } = payload;
 
     let user_email: Login = await this.loginRepository.findOne({
       where: { email },

@@ -79,9 +79,20 @@ export class ContractRiskAnalysisService {
     return { data, totalRecords };
   }
 
+  async updateFinalAnalysis(finalAnalysis: any, id: number) {
+    const dataUpdate = await this.riskResultRepo.update(
+      { id },
+      { ...finalAnalysis },
+    );
+    if (dataUpdate.affected) {
+      return await this.riskResultRepo.findOne({ where: { id } });
+    }
+    throw new HttpException('update failed', HttpStatus.CONFLICT);
+  }
+
   async findOne(id: number, req: any) {
     if (req.user.role === RoleType.USER) {
-      return await this.riskResultRepo.find({
+      return await this.riskResultRepo.findOne({
         where: { id, login: { id: req.user.id }, deletedAt: IsNull() },
         select: { login: { name: true } },
         relations: {
@@ -89,7 +100,7 @@ export class ContractRiskAnalysisService {
         },
       });
     }
-    return await this.riskResultRepo.find({
+    return await this.riskResultRepo.findOne({
       where: { id, deletedAt: IsNull() },
       select: { login: { name: true } },
       relations: {

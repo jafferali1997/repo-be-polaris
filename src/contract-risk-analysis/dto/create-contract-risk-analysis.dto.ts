@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UploadedFiles } from '@nestjs/common/decorators';
-import { IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export class CreateContractRiskAnalysisDto {
   @ApiProperty()
@@ -22,6 +22,14 @@ export class CreateContractRiskAnalysisDto {
   @ApiProperty()
   @IsString()
   clauses: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  isRecommended: boolean;
+
+  @ApiProperty()
+  @IsString()
+  recommendation: string;
 
   @ApiProperty()
   @IsString()
