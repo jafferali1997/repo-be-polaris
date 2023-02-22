@@ -24,10 +24,6 @@ export class CreateContractRiskAnalysisDto {
   clauses: string;
 
   @ApiProperty()
-  @IsBoolean()
-  isRecommended: boolean;
-
-  @ApiProperty()
   @IsString()
   recommendation: string;
 

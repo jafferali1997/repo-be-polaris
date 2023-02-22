@@ -198,7 +198,7 @@ export class UsersService {
   // }
 
   async createOrFindUserWithGoogle(payload: any) {
-    const { email } = payload;
+    const { email, name } = payload;
 
     let user_email: Login = await this.loginRepository.findOne({
       where: { email },
@@ -210,6 +210,7 @@ export class UsersService {
       return {
         email: user_email.email,
         role: user_email.role,
+        name: user_email.name,
         id: user_email.id,
         //access_token: this.helper.generateToken(user_email),
       };
@@ -217,6 +218,7 @@ export class UsersService {
 
     const finalPayload = {
       email,
+      name,
       role: RoleType.USER,
       isEmailVerified: true,
     };
@@ -230,6 +232,7 @@ export class UsersService {
       email: user_email.email,
       role: user_email.role,
       id: user_email.id,
+      name: user_email.name,
       //access_token: this.helper.generateToken(user_email),
     };
   }

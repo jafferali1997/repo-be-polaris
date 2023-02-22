@@ -29,9 +29,6 @@ export class RiskResult {
   @Column()
   summaryAnalysis: string;
 
-  @Column({ default: null })
-  isRecommended: boolean;
-
   @Column({ nullable: true })
   recommendation: string;
 
