@@ -62,6 +62,7 @@ export class ContractRiskAnalysisService {
         },
         skip: skip,
         take: take,
+        order: { id: 'DESC' },
       });
       return { data, totalRecords };
     }
@@ -75,6 +76,7 @@ export class ContractRiskAnalysisService {
       relations: { login: true },
       skip: skip,
       take: take,
+      order: { id: 'DESC' },
     });
     return { data, totalRecords };
   }

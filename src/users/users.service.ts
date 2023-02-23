@@ -53,6 +53,7 @@ export class UsersService {
       },
       skip: skip,
       take: take,
+      order: { id: 'DESC' },
     });
     const finalResponse = this.helper.paginateResponse(data, pages, take);
     return finalResponse;
