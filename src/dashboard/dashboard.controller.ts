@@ -22,11 +22,6 @@ import { UpdateDashboardDto } from './dto/update-dashboard.dto';
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
-  // @Post()
-  // create(@Body() createDashboardDto: CreateDashboardDto) {
-  //   return this.dashboardService.create(createDashboardDto);
-  // }
-
   @Get()
   @UseGuards(AllAuthGuard)
   @Roles(RoleType.ADMIN, RoleType.USER)
@@ -42,22 +37,4 @@ export class DashboardController {
   getGraph(@Req() req) {
     return this.dashboardService.getGraph(req);
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.dashboardService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateDashboardDto: UpdateDashboardDto,
-  // ) {
-  //   return this.dashboardService.update(+id, updateDashboardDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.dashboardService.remove(+id);
-  // }
 }
