@@ -28,27 +28,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       migrations: [__dirname + '/../../typeorm-migrations/*.{ts,js}'],
       entities: [__dirname + '/../**/entity/*.{ts,js}'],
       migrationsTableName: 'typeorm_migrations',
-      ssl: configuration.get<boolean>('SSL_SYNC'),
-      synchronize: this.config.get<boolean>('DATABASE_SYNC'), // never use TRUE in production!
+      ssl: true,
     };
   }
 }
-
-const configuration = new ConfigService();
-export const dataSourceOptions: DataSourceOptions = {
-  type: 'postgres',
-  host: configuration.get<string>('DATABASE_HOST'),
-  port: configuration.get<number>('DATABASE_PORT'),
-  username: configuration.get<string>('DATABASE_USER_NAME'),
-  password: configuration.get<string>('DATABASE_PASSWORD'),
-  database: configuration.get<string>('DATABASE_NAME'),
-  cache: false,
-  entities: ['dist/**/*entity.js'],
-  migrations: ['dist/db/migrations/*.js'],
-  maxQueryExecutionTime: 300,
-  migrationsTableName: 'typeorm_migrations',
-  ssl: configuration.get<boolean>('SSL_SYNC'),
-};
-
-const dataSource = new DataSource(dataSourceOptions);
-export default dataSource;
