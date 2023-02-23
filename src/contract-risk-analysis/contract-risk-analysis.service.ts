@@ -44,6 +44,28 @@ export class ContractRiskAnalysisService {
     }
   }
 
+  async userFindAll(id: number, search, filter, page, limit) {
+    const take = limit || 10;
+    const pages = page || 1;
+    const skip = (pages - 1) * take;
+    const [data, totalRecords] = await this.riskResultRepo.findAndCount({
+      where: {
+        login: { id },
+        deletedAt: IsNull(),
+        ...(search && { agreementName: Like(search) }),
+        ...(filter && { summaryAnalysis: filter }),
+      },
+      select: { login: { name: true } },
+      relations: {
+        login: true,
+      },
+      skip,
+      take,
+      order: { id: 'DESC' },
+    });
+    return { data, totalRecords };
+  }
+
   async findAll(user, search, filter, page, limit) {
     const take = limit || 10;
     const pages = page || 1;

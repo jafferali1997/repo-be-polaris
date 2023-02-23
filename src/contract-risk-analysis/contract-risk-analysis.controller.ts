@@ -81,6 +81,30 @@ export class ContractRiskAnalysisController {
   @UseGuards(AllAuthGuard)
   @Roles(RoleType.ADMIN, RoleType.USER)
   @ApiBearerAuth()
+  @Get(':userId')
+  @ApiQueryArray([
+    { name: 'search', type: 'string', required: false },
+    { name: 'filter', type: 'string', required: false },
+  ])
+  userFindAll(
+    @Param('userId') id: string,
+    @Query('search') search: string,
+    @Query('filter') filter: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.contractRiskAnalysisService.userFindAll(
+      +id,
+      search,
+      filter,
+      page,
+      limit,
+    );
+  }
+
+  @UseGuards(AllAuthGuard)
+  @Roles(RoleType.ADMIN, RoleType.USER)
+  @ApiBearerAuth()
   @Patch(':id')
   updateFinalAnalysis(
     @Body() body: UpdateFinalAnalysisDto,
