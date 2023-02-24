@@ -81,7 +81,7 @@ export class ContractRiskAnalysisController {
   @UseGuards(AllAuthGuard)
   @Roles(RoleType.ADMIN, RoleType.USER)
   @ApiBearerAuth()
-  @Get(':userId')
+  @Get('/user/:userId')
   @ApiQueryArray([
     { name: 'search', type: 'string', required: false },
     { name: 'filter', type: 'string', required: false },
