@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
-import { Repository, IsNull, Like } from 'typeorm';
+import { Repository, IsNull, Like, ILike } from 'typeorm';
 import { CreateContractRiskAnalysisDto } from './dto/create-contract-risk-analysis.dto';
 import { UpdateContractRiskAnalysisDto } from './dto/update-contract-risk-analysis.dto';
 
@@ -70,13 +70,17 @@ export class ContractRiskAnalysisService {
     const take = limit || 10;
     const pages = page || 1;
     const skip = (pages - 1) * take;
+
+    const searchCondition = search ? ILike(`%${search}%`) : undefined;
+    const filterCondition = filter ? ILike(`%${filter}%`) : undefined;
+
     if (user.role === RoleType.USER) {
       const [data, totalRecords] = await this.riskResultRepo.findAndCount({
         where: {
           login: { id: user.id },
           deletedAt: IsNull(),
-          ...(search && { agreementName: Like(search) }),
-          ...(filter && { summaryAnalysis: filter }),
+          agreementName: searchCondition,
+          summaryAnalysis: filterCondition,
         },
         select: { login: { name: true } },
         relations: {
@@ -86,13 +90,14 @@ export class ContractRiskAnalysisService {
         take: take,
         order: { id: 'DESC' },
       });
+
       return { data, totalRecords };
     }
     const [data, totalRecords] = await this.riskResultRepo.findAndCount({
       where: {
         deletedAt: IsNull(),
-        ...(search && { agreementName: Like(search) }),
-        ...(filter && { summaryAnalysis: filter }),
+        agreementName: searchCondition,
+        summaryAnalysis: filterCondition,
       },
       select: { login: { name: true } },
       relations: { login: true },
@@ -100,6 +105,7 @@ export class ContractRiskAnalysisService {
       take: take,
       order: { id: 'DESC' },
     });
+
     return { data, totalRecords };
   }
 
