@@ -1,12 +1,7 @@
-import { MembershipType } from './../constants/membershipType.constants';
-import { PERMISSIONS_TYPE } from './../constants/permission-types';
-import { RoleType } from './../constants/role-type';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToOne,
-  OneToMany,
   UpdateDateColumn,
   CreateDateColumn,
   ManyToOne,

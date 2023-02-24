@@ -17,6 +17,7 @@ import { FacebookOauthModule } from './facebook-oauth/facebook-oauth.module';
 import { UploadModule } from './upload/upload.module';
 import { AzureServicesModule } from './azure-services/azure-services.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { UserEmailsModule } from './user-emails/user-emails.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     UploadModule,
     AzureServicesModule,
     DashboardModule,
+    UserEmailsModule,
   ],
   controllers: [AppController],
   providers: [

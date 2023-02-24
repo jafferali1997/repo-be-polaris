@@ -43,10 +43,12 @@ export const enum ALREADY_EXIST_RESPONSE {
   status = 409,
   message = 'Record Already Exist',
 }
+
 export const enum USER_ALREADY_EXIST_RESPONSE {
   status = 409,
   message = 'User Already Exist',
 }
+
 export const enum EMAIL_ALREADY_EXIST_RESPONSE {
   status = 409,
   message = 'Email Already Exist',
