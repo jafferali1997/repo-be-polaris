@@ -28,8 +28,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       migrations: [__dirname + '/../../typeorm-migrations/*.{ts,js}'],
       entities: [__dirname + '/../**/entity/*.{ts,js}'],
       migrationsTableName: 'typeorm_migrations',
-      // ssl: true,
-      synchronize: true,
+      ssl: true,
+      // synchronize: true,
     };
   }
 }
